@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analyst Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #131730;
+            --text-primary: #e0e6ed;
+            --text-secondary: #8892b0;
+            --accent-1: #64ffda;
+            --accent-2: #5a67d8;
+            --accent-3: #f687b3;
+            --chart-1: #4299e1;
+            --chart-2: #48bb78;
+            --chart-3: #ed8936;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Custom Cursor */
+        #cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent-1);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            mix-blend-mode: difference;
+        }
+
+        #cursor-glow {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, var(--accent-1) 0%, transparent 70%);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.3;
+            transition: all 0.3s ease;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        .logo {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--accent-1);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-family: 'IBM Plex Mono', monospace;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::before {
+            content: '{ ';
+            color: var(--accent-1);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a::after {
+            content: ' }';
+            color: var(--accent-1);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-1);
+        }
+
+        .nav-links a:hover::before,
+        .nav-links a:hover::after {
+            opacity: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 5% 0 5%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-viz-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .data-viz-bg svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-greeting {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1rem;
+            color: var(--accent-1);
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.2s;
+        }
+
+        .hero-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.4s;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 500;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.6s;
+        }
+
+        .hero-subtitle .highlight {
+            color: var(--accent-1);
+            font-weight: 700;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.8s;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 1s;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 1rem 2rem;
+            text-decoration: none;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: transparent;
+            border: 2px solid var(--accent-1);
+            color: var(--accent-1);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-1);
+            transition: left 0.3s;
+            z-index: -1;
+        }
+
+        .btn-primary:hover {
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover::before {
+            left: 0;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--text-secondary);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-1);
+            color: var(--accent-1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* About Section */
+        .about {
+            padding: 8rem 5%;
+            background: var(--bg-secondary);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .section-number {
+            font-family: 'IBM Plex Mono', monospace;
+            color: var(--accent-1);
+            font-size: 1.2rem;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: rgba(100, 255, 218, 0.2);
+            margin-left: 2rem;
+        }
+
+        .about-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .metric-card {
+            padding: 2rem;
+            background: var(--bg-primary);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--accent-1);
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .metric-card:hover {
+            transform: translateX(10px);
+            border-color: var(--accent-1);
+        }
+
+        .metric-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .metric-value {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--accent-1);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Projects Section */
+        .projects {
+            padding: 8rem 5%;
+        }
+
+        .projects-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .project-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 6rem;
+            align-items: center;
+        }
+
+        .project-item:nth-child(even) {
+            direction: rtl;
+        }
+
+        .project-item:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .project-visual {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+        }
+
+        .project-visual:hover {
+            border-color: var(--accent-1);
+            transform: translateY(-5px);
+        }
+
+        .project-visual::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(100, 255, 218, 0.05), rgba(90, 103, 216, 0.05));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .project-visual:hover::before {
+            opacity: 1;
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 250px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            gap: 0.5rem;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--accent-1), var(--accent-2));
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s;
+            opacity: 0.7;
+        }
+
+        .project-visual:hover .bar {
+            opacity: 1;
+            transform: scaleY(1.05);
+        }
+
+        .project-details {
+            position: relative;
+        }
+
+        .project-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-1);
+            margin-bottom: 1rem;
+        }
+
+        .project-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .project-description {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid var(--accent-1);
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Skills Section */
+        .skills {
+            padding: 8rem 5%;
+            background: var(--bg-secondary);
+        }
+
+        .skills-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+        }
+
+        .skill-group h3 {
+            font-family: 'IBM Plex Mono', monospace;
+            color: var(--accent-1);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .skill-list {
+            list-style: none;
+        }
+
+        .skill-item {
+            padding: 0.75rem 0;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .skill-item::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--accent-1);
+            transition: transform 0.3s;
+        }
+
+        .skill-item:hover {
+            color: var(--accent-1);
+            padding-left: 2rem;
+        }
+
+        .skill-item:hover::before {
+            transform: translateX(5px);
+        }
+
+        /* Tools Badges */
+        .tools-showcase {
+            margin-top: 4rem;
+            padding-top: 4rem;
+            border-top: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 2rem auto 0;
+        }
+
+        .tool-badge {
+            padding: 1.5rem;
+            background: var(--bg-primary);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            text-align: center;
+            transition: all 0.3s;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .tool-badge:hover {
+            border-color: var(--accent-1);
+            transform: translateY(-5px);
+            color: var(--accent-1);
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 8rem 5%;
+            text-align: center;
+        }
+
+        .contact-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .contact-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+        }
+
+        .contact-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 3rem;
+        }
+
+        .contact-email {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: transparent;
+            border: 2px solid var(--accent-1);
+            color: var(--accent-1);
+            text-decoration: none;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-email::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-1);
+            transition: left 0.3s;
+            z-index: -1;
+        }
+
+        .contact-email:hover {
+            color: var(--bg-primary);
+        }
+
+        .contact-email:hover::before {
+            left: 0;
+        }
+
+        .social-links {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .social-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .social-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-1);
+            transition: width 0.3s;
+        }
+
+        .social-link:hover {
+            color: var(--accent-1);
+        }
+
+        .social-link:hover::after {
+            width: 100%;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            background: var(--bg-secondary);
+            text-align: center;
+            color: var(--text-secondary);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        /* Scroll Progress */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            z-index: 9999;
+            transition: width 0.1s;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .about-content,
+            .project-item {
+                grid-template-columns: 1fr;
+            }
+
+            .project-item:nth-child(even) {
+                direction: ltr;
+            }
+
+            .skills-container {
+                grid-template-columns: 1fr;
+            }
+
+            .tools-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            #cursor, #cursor-glow {
+                display: none;
+            }
+
+            body {
+                cursor: auto;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div id="cursor"></div>
+    <div id="cursor-glow"></div>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">data_analyst.py</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="data-viz-bg">
+            <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+                <!-- Grid Lines -->
+                <line x1="0" y1="100" x2="1200" y2="100" stroke="rgba(100, 255, 218, 0.1)" stroke-width="1"/>
+                <line x1="0" y1="200" x2="1200" y2="200" stroke="rgba(100, 255, 218, 0.1)" stroke-width="1"/>
+                <line x1="0" y1="300" x2="1200" y2="300" stroke="rgba(100, 255, 218, 0.1)" stroke-width="1"/>
+                <line x1="0" y1="400" x2="1200" y2="400" stroke="rgba(100, 255, 218, 0.1)" stroke-width="1"/>
+                <line x1="0" y1="500" x2="1200" y2="500" stroke="rgba(100, 255, 218, 0.1)" stroke-width="1"/>
+                <line x1="0" y1="600" x2="1200" y2="600" stroke="rgba(100, 255, 218, 0.1)" stroke-width="1"/>
+                <line x1="0" y1="700" x2="1200" y2="700" stroke="rgba(100, 255, 218, 0.1)" stroke-width="1"/>
+                
+                <!-- Animated Line Chart -->
+                <polyline points="0,600 150,450 300,500 450,300 600,350 750,200 900,250 1050,150 1200,100"
+                    fill="none" stroke="rgba(100, 255, 218, 0.5)" stroke-width="2">
+                    <animate attributeName="stroke-dasharray" from="0,2000" to="2000,0" dur="3s" repeatCount="indefinite"/>
+                </polyline>
+            </svg>
+        </div>
+        <div class="hero-content">
+            <p class="hero-greeting">Hi, my name is</p>
+            <h1 class="hero-title">NIMRA ASIF</h1>
+            <h2 class="hero-subtitle">I Turn <span class="highlight">Data</span> Into <span class="highlight">Insights</span></h2>
+            <p class="hero-description">
+                I'm a data analyst specializing in transforming complex datasets into actionable business intelligence. 
+                With expertise in Python, SQL, R, Power BI, and Excel, I help organizations make data-driven decisions 
+                through statistical analysis, data visualization, and predictive modeling.
+            </p>
+            <div class="cta-buttons">
+                <a href="#projects" class="btn-primary">View My Work</a>
+                <a href="#contact" class="btn-secondary">Get In Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about fade-in">
+        <div class="section-header">
+            <span class="section-number">01.</span>
+            <h2 class="section-title">ABOUT ME</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="about-content">
+            <div class="about-text">
+                <p>
+                    I'm a passionate data analyst with a strong background in statistical analysis and data visualization. 
+                    My journey into data analytics began during my studies in statistics, where I discovered the power 
+                    of data to tell compelling stories and drive business decisions.
+                </p>
+                <p>
+                    I specialize in extracting insights from large datasets using Python and SQL for data manipulation, 
+                    R for statistical modeling, and Power BI and Excel for creating compelling visualizations and 
+                    interactive dashboards. I love uncovering patterns and trends that drive strategic initiatives.
+                </p>
+                <p>
+                    When I'm not analyzing data, you can find me exploring new visualization techniques, contributing 
+                    to data science communities, or learning about the latest advancements in analytics and business intelligence.
+                </p>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">100M+</div>
+                    <div class="metric-label">Records Analyzed</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">50+</div>
+                    <div class="metric-label">Dashboards Created</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">15+</div>
+                    <div class="metric-label">ML Models Deployed</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">98%</div>
+                    <div class="metric-label">Prediction Accuracy</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects fade-in">
+        <div class="projects-container">
+            <div class="section-header">
+                <span class="section-number">02.</span>
+                <h2 class="section-title">FEATURED PROJECTS</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="project-item">
+                <div class="project-visual">
+                    <div class="chart-placeholder">
+                        <div class="bar" style="height: 60%;"></div>
+                        <div class="bar" style="height: 85%;"></div>
+                        <div class="bar" style="height: 45%;"></div>
+                        <div class="bar" style="height: 90%;"></div>
+                        <div class="bar" style="height: 70%;"></div>
+                        <div class="bar" style="height: 95%;"></div>
+                    </div>
+                </div>
+                <div class="project-details">
+                    <p class="project-label">Database Project</p>
+                    <h3 class="project-title">CARBON EMISSION MONITORING SYSTEM</h3>
+                    <div class="project-description">
+                        Designed and implemented a comprehensive database system to track emissions, products, and 
+                        alerts across all regions, countries, and companies. Built a global monitoring dashboard with 
+                        real-time insights, enabling stakeholders to stay updated on environmental impact. Created 
+                        normalized database schema with complex SQL queries for multi-dimensional analysis and reporting.
+                    </div>
+                    <div class="project-tech">
+                        <span>SQL</span>
+                        <span>Database Design</span>
+                        <span>Data Modeling</span>
+                        <span>Real-time Monitoring</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-item">
+                <div class="project-visual">
+                    <div class="chart-placeholder">
+                        <div class="bar" style="height: 60%;"></div>
+                        <div class="bar" style="height: 85%;"></div>
+                        <div class="bar" style="height: 45%;"></div>
+                        <div class="bar" style="height: 90%;"></div>
+                        <div class="bar" style="height: 70%;"></div>
+                        <div class="bar" style="height: 95%;"></div>
+                    </div>
+                </div>
+                <div class="project-details">
+                    <p class="project-label">Data Analysis Project</p>
+                    <h3 class="project-title">TITANIC SURVIVAL ANALYSIS</h3>
+                    <div class="project-description">
+                        Performed comprehensive exploratory data analysis on the Titanic dataset to identify survival 
+                        patterns. Analyzed passenger demographics, ticket classes, and fare distributions. Created 
+                        visualizations using Seaborn to reveal key factors affecting survival rates.
+                    </div>
+                    <div class="project-tech">
+                        <span>Python</span>
+                        <span>Pandas</span>
+                        <span>Seaborn</span>
+                        <span>Matplotlib</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-item">
+                <div class="project-visual">
+                    <div class="chart-placeholder">
+                        <div class="bar" style="height: 75%; background: linear-gradient(to top, #4299e1, #5a67d8);"></div>
+                        <div class="bar" style="height: 65%; background: linear-gradient(to top, #4299e1, #5a67d8);"></div>
+                        <div class="bar" style="height: 88%; background: linear-gradient(to top, #4299e1, #5a67d8);"></div>
+                        <div class="bar" style="height: 55%; background: linear-gradient(to top, #4299e1, #5a67d8);"></div>
+                        <div class="bar" style="height: 92%; background: linear-gradient(to top, #4299e1, #5a67d8);"></div>
+                        <div class="bar" style="height: 78%; background: linear-gradient(to top, #4299e1, #5a67d8);"></div>
+                    </div>
+                </div>
+                <div class="project-details">
+                    <p class="project-label">Data Analysis Project</p>
+                    <h3 class="project-title">RESTAURANT TIPS ANALYSIS</h3>
+                    <div class="project-description">
+                        Analyzed restaurant tipping patterns using the Tips dataset to understand factors influencing 
+                        tip amounts. Examined relationships between total bill, tip percentage, party size, and timing. 
+                        Generated statistical insights and correlation analysis with detailed visualizations.
+                    </div>
+                    <div class="project-tech">
+                        <span>Python</span>
+                        <span>Seaborn</span>
+                        <span>Statistical Analysis</span>
+                        <span>EDA</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-item">
+                <div class="project-visual">
+                    <div class="chart-placeholder">
+                        <div class="bar" style="height: 50%; background: linear-gradient(to top, #48bb78, #38b2ac);"></div>
+                        <div class="bar" style="height: 70%; background: linear-gradient(to top, #48bb78, #38b2ac);"></div>
+                        <div class="bar" style="height: 85%; background: linear-gradient(to top, #48bb78, #38b2ac);"></div>
+                        <div class="bar" style="height: 62%; background: linear-gradient(to top, #48bb78, #38b2ac);"></div>
+                        <div class="bar" style="height: 95%; background: linear-gradient(to top, #48bb78, #38b2ac);"></div>
+                        <div class="bar" style="height: 80%; background: linear-gradient(to top, #48bb78, #38b2ac);"></div>
+                    </div>
+                </div>
+                <div class="project-details">
+                    <p class="project-label">Data Analysis Project</p>
+                    <h3 class="project-title">FLIGHT DELAYS ANALYSIS</h3>
+                    <div class="project-description">
+                        Conducted time series analysis on the Flights dataset to identify seasonal patterns and trends 
+                        in passenger traffic. Analyzed monthly and yearly flight patterns, created heatmaps showing peak 
+                        travel periods, and visualized passenger volume fluctuations over time.
+                    </div>
+                    <div class="project-tech">
+                        <span>Python</span>
+                        <span>Pandas</span>
+                        <span>Seaborn</span>
+                        <span>Time Series</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-item">
+                <div class="project-visual">
+                    <div class="chart-placeholder">
+                        <div class="bar" style="height: 68%; background: linear-gradient(to top, #ed8936, #f687b3);"></div>
+                        <div class="bar" style="height: 82%; background: linear-gradient(to top, #ed8936, #f687b3);"></div>
+                        <div class="bar" style="height: 58%; background: linear-gradient(to top, #ed8936, #f687b3);"></div>
+                        <div class="bar" style="height: 91%; background: linear-gradient(to top, #ed8936, #f687b3);"></div>
+                        <div class="bar" style="height: 75%; background: linear-gradient(to top, #ed8936, #f687b3);"></div>
+                        <div class="bar" style="height: 87%; background: linear-gradient(to top, #ed8936, #f687b3);"></div>
+                    </div>
+                </div>
+                <div class="project-details">
+                    <p class="project-label">Data Visualization Project</p>
+                    <h3 class="project-title">DATA VISUALIZATION PORTFOLIO</h3>
+                    <div class="project-description">
+                        Created a comprehensive collection of data visualizations using multiple Seaborn datasets. 
+                        Demonstrated proficiency in various plot types including distribution plots, categorical plots, 
+                        regression plots, and matrix visualizations to effectively communicate data insights.
+                    </div>
+                    <div class="project-tech">
+                        <span>Python</span>
+                        <span>Seaborn</span>
+                        <span>Matplotlib</span>
+                        <span>Data Viz</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills fade-in">
+        <div class="section-header">
+            <span class="section-number">03.</span>
+            <h2 class="section-title">SKILLS & TOOLS</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="skills-container">
+            <div class="skill-group">
+                <h3>Core Technologies</h3>
+                <ul class="skill-list">
+                    <li class="skill-item">Python (Pandas, NumPy, SciPy)</li>
+                    <li class="skill-item">SQL (PostgreSQL, MySQL, SQL Server)</li>
+                    <li class="skill-item">R (dplyr, ggplot2, tidyr)</li>
+                    <li class="skill-item">Power BI (DAX, Power Query)</li>
+                    <li class="skill-item">Excel (Advanced Functions, VBA, Power Pivot)</li>
+                    <li class="skill-item">Statistical Analysis</li>
+                </ul>
+            </div>
+
+            <div class="skill-group">
+                <h3>Data Analysis & Modeling</h3>
+                <ul class="skill-list">
+                    <li class="skill-item">Data Cleaning & Transformation</li>
+                    <li class="skill-item">Exploratory Data Analysis</li>
+                    <li class="skill-item">Predictive Modeling</li>
+                    <li class="skill-item">A/B Testing & Experimentation</li>
+                    <li class="skill-item">Statistical Hypothesis Testing</li>
+                    <li class="skill-item">Time Series Analysis</li>
+                </ul>
+            </div>
+
+            <div class="skill-group">
+                <h3>Visualization & Reporting</h3>
+                <ul class="skill-list">
+                    <li class="skill-item">Power BI Dashboards</li>
+                    <li class="skill-item">Excel Charts & Pivot Tables</li>
+                    <li class="skill-item">Tableau</li>
+                    <li class="skill-item">Matplotlib & Seaborn</li>
+                    <li class="skill-item">ggplot2 (R)</li>
+                    <li class="skill-item">Interactive Reporting</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tools-showcase">
+            <div class="section-header">
+                <h2 class="section-title" style="font-size: 2rem;">ADDITIONAL TOOLS & TECHNOLOGIES</h2>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-badge">Jupyter Notebook</div>
+                <div class="tool-badge">Git & GitHub</div>
+                <div class="tool-badge">Google Sheets</div>
+                <div class="tool-badge">Scikit-learn</div>
+                <div class="tool-badge">Plotly</div>
+                <div class="tool-badge">Apache Spark</div>
+                <div class="tool-badge">AWS</div>
+                <div class="tool-badge">Azure</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact fade-in">
+        <div class="contact-content">
+            <div class="section-header" style="justify-content: center;">
+                <span class="section-number">04.</span>
+                <h2 class="section-title">GET IN TOUCH</h2>
+            </div>
+            <p class="contact-description">
+                I'm currently looking for new opportunities and exciting data challenges. Whether you have a 
+                project in mind, need analytical support, or just want to connect, feel free to reach out through 
+                my social media profiles below!
+            </p>
+            <div class="social-links">
+                <a href="https://wa.me/923261299865" class="social-link" target="_blank">WhatsApp</a>
+                <a href="https://github.com/NimraAsif998" class="social-link" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>Designed & Built by Nimra Asif | © 2026</p>
+    </footer>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        const cursorGlow = document.getElementById('cursor-glow');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+            cursorGlow.style.left = e.clientX - 20 + 'px';
+            cursorGlow.style.top = e.clientY - 20 + 'px';
+        });
+
+        // Scroll Progress
+        window.addEventListener('scroll', () => {
+            const scrollProgress = document.querySelector('.scroll-progress');
+            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (window.scrollY / scrollHeight) * 100;
+            scrollProgress.style.width = scrolled + '%';
+        });
+
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Fade-in on Scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Cursor hover effects
+        const hoverElements = document.querySelectorAll('a, button, .project-visual, .metric-card, .skill-item, .tool-badge');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(1.5)';
+                cursorGlow.style.transform = 'scale(1.5)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+                cursorGlow.style.transform = 'scale(1)';
+            });
+        });
+
+        // Animate bars on scroll
+        const projectVisuals = document.querySelectorAll('.project-visual');
+        const barObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bars = entry.target.querySelectorAll('.bar');
+                    bars.forEach((bar, index) => {
+                        setTimeout(() => {
+                            bar.style.animation = `growBar 0.6s ease forwards`;
+                        }, index * 100);
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+
+        projectVisuals.forEach(visual => {
+            barObserver.observe(visual);
+        });
+
+        // Add keyframe animation for bars
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes growBar {
+                from {
+                    height: 0;
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
